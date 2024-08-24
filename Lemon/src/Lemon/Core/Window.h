@@ -5,15 +5,13 @@ namespace Lemon
 	class Window
 	{
 	public:
-		virtual ~Window() = 0;
+		virtual ~Window() = default;
 
 		virtual void HandleEvents() = 0;
 		virtual void SwapBuffers() = 0;
 
-		void* GetNative() const { return m_NativeWindow; }
+		virtual void* GetNative() = 0;
 
 		static Window* Create();
-	protected:
-		void* m_NativeWindow;
 	};
 }

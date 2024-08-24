@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <spdlog/spdlog.h>
+#include <mutex>
 
 #include "Lemon/Core/Core.h"
 #include "Lemon/Core/Logger.h"
