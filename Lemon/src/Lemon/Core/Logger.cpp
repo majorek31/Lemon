@@ -1,26 +1,21 @@
 #include "pch.h"
-#include "Logger.h"
 
 namespace Lemon
 {
-	Logger::Logger(const std::string& name)
-		: m_LoggerName(name)
+	void Logger::Init()
 	{
-		
+		std::vector<spdlog::sink_ptr> logSinks;
+		logSinks.emplace_back(std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>());
+		logSinks[0]->set_pattern("%^[%T] %n: %v%$");
+
+		s_CoreLogger = std::make_shared<spdlog::logger>("Lemon", logSinks.begin(), logSinks.end());
+		spdlog::register_logger(s_CoreLogger);
+		s_CoreLogger->set_level(spdlog::level::trace);
+		s_CoreLogger->flush_on(spdlog::level::trace);
 	}
 
-	void Logger::Log(const char* fmt, ...)
+	Ref<spdlog::logger> Logger::GetCore()
 	{
-		
-	}
-
-	void Logger::Warn(const char* fmt, ...)
-	{
-
-	}
-
-	void Logger::Error(const char* fmt, ...)
-	{
-
+		return s_CoreLogger;
 	}
 }

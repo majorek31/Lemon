@@ -5,11 +5,12 @@ namespace Lemon
 	class Logger
 	{
 	public:
-		Logger(const std::string& name);
-		void Log(const char* fmt, ...);
-		void Warn(const char* fmt, ...);
-		void Error(const char* fmt, ...);
+		static void Init();
+		static Ref<spdlog::logger> GetCore();
 	private:
-		std::string m_LoggerName;
+		inline static Ref<spdlog::logger> s_CoreLogger;
 	};
 }
+
+#define LM_CORE_INFO(...) ::Lemon::Logger::GetCore()->info(__VA_ARGS__)
+#define LM_CORE_ERROR(...) ::Lemon::Logger::GetCore()->error(__VA_ARGS__)
