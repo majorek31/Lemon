@@ -14,5 +14,6 @@ Lemon::Application* Lemon::Application::Create(const Application::Options& optio
 int main()
 {
 	auto app = Lemon::Application::Create({ "Lemon Sandbox - 2D" });
+	app->Start();
 	delete app;
 }

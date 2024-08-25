@@ -1,2 +1,5 @@
 #pragma once
-#include "Core/Application.h"
+
+#include "Lemon/Core/Core.h"
+
+#include "Lemon/Core/Application.h"
