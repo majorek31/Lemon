@@ -16,9 +16,9 @@ namespace Lemon
 	template<typename T>
 	using Scoped = std::unique_ptr<T>;
 	template<typename T, typename... TArgs>
-	constexpr Scoped<T> CreateScoped(TArgs... args)
+	constexpr Scoped<T> CreateScoped(TArgs&&... args)
 	{
-		return std::make_unique(new T(std::forward<TArgs>(args)...));
+		return std::make_unique<T>(std::forward<TArgs>(args)...);
 	}
 
 }

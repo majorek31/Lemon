@@ -1,5 +1,7 @@
 #include "pch.h"
 
+#include "Lemon/Events/ApplicationEvents.h"
+
 namespace Lemon
 {
 	Application::Application(const Options& options) : 
@@ -12,6 +14,8 @@ namespace Lemon
 		Logger::Init();
 		LM_CORE_INFO("Application created: {:s}", options.Name);
 		m_Window.reset(Window::Create());
+
+		EventManager::Subscribe<WindowCloseEvent>([this](const WindowCloseEvent& e) { OnWindowClose(e); });
 	}
 
 	void Application::Start()
@@ -20,7 +24,14 @@ namespace Lemon
 		{
 			m_Window->HandleEvents();
 			m_Window->SwapBuffers();
+
+			EventManager::Get().Dispatch();
 		}
+	}
+
+	void Application::OnWindowClose(const WindowCloseEvent& event)
+	{
+		Close();
 	}
 
 	void Application::Close()

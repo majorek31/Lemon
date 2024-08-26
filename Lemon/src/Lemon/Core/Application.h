@@ -7,6 +7,8 @@ class Window;
 
 namespace Lemon 
 {
+	class WindowCloseEvent;
+	class WindowResizeEvent;
 	class Application
 	{
 	public:
@@ -21,6 +23,8 @@ namespace Lemon
 
 		// To implement by client
 		static Application* Create(const Options& options);
+	private:
+		void OnWindowClose(const WindowCloseEvent& event);
 	private:
 		inline static Application* s_Instance = nullptr;
 		std::string m_ApplicationName;

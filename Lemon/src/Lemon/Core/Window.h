@@ -2,6 +2,7 @@
 
 namespace Lemon
 {
+
 	class Window
 	{
 	public:
