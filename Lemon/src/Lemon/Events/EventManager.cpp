@@ -76,4 +76,19 @@ namespace Lemon
 		return *s_Instance;
 	}
 
+	void EventManager::Unsubscribe(EventHandlerHandle handle)
+	{
+		for (auto& [_, handlers] : s_Instance->m_Subscribers)
+		{
+			for (auto& handler : handlers)
+			{
+				if (handler->GetType() == handle)
+				{
+					handlers.erase(std::find(handlers.begin(), handlers.end(), handler));
+					return;
+				}
+			}
+		}
+	}
+
 }

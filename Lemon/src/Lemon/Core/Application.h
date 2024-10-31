@@ -8,7 +8,6 @@ class Window;
 namespace Lemon 
 {
 	class WindowCloseEvent;
-	class WindowResizeEvent;
 	class Application
 	{
 	public:
@@ -18,6 +17,8 @@ namespace Lemon
 			const std::string& Name;
 		};
 		Application(const Options& options);
+		~Application();
+
 		void Start();
 		void Close();
 
@@ -30,5 +31,6 @@ namespace Lemon
 		std::string m_ApplicationName;
 		Scoped<Window> m_Window;
 		bool m_IsRunning;
+		EventHandlerHandle m_WindowCloseEventHandler;
 	};
 }

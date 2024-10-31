@@ -8,14 +8,20 @@ namespace Lemon
 		m_ApplicationName(options.Name),
 		m_IsRunning(true)
 	{
+		LM_TIME();
 		if (s_Instance)
 			LM_CORE_ERROR("Application created twice {:p}", (void*)this);
 		s_Instance = this;
 		Logger::Init();
 		LM_CORE_INFO("Application created: {:s}", options.Name);
 		m_Window.reset(Window::Create());
+		m_WindowCloseEventHandler =	EventManager::Subscribe<WindowCloseEvent>([this](const WindowCloseEvent& e) { OnWindowClose(e); });
+	}
 
-		EventManager::Subscribe<WindowCloseEvent>([this](const WindowCloseEvent& e) { OnWindowClose(e); });
+	Application::~Application()
+	{
+		LM_TIME();
+		EventManager::Unsubscribe(m_WindowCloseEventHandler);
 	}
 
 	void Application::Start()
@@ -36,6 +42,7 @@ namespace Lemon
 
 	void Application::Close()
 	{
+		LM_TIME();
 		m_IsRunning = false;
 	}
 

@@ -16,7 +16,7 @@ namespace Lemon
 		LM_CORE_INFO("Created window");
 		glfwSetWindowUserPointer(m_Window, this);
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow*, int w, int h) {
-			EventManager::Get().QueueEvent(new WindowResizeEvent(w, h));
+			EventManager::Get().FireEvent(new WindowResizeEvent(w, h));
 		});
 	}
 
@@ -28,7 +28,6 @@ namespace Lemon
 
 	void WindowsWindow::HandleEvents()
 	{
-		EventManager::Get().QueueEvent(new WindowResizeEvent(80, 60));
 		glfwPollEvents();
 		if (glfwWindowShouldClose(m_Window))
 			EventManager::Get().QueueEvent(new WindowCloseEvent());
