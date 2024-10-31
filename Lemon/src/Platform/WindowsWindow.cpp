@@ -30,7 +30,7 @@ namespace Lemon
 	{
 		glfwPollEvents();
 		if (glfwWindowShouldClose(m_Window))
-			EventManager::Get().QueueEvent(new WindowCloseEvent());
+			EventManager::Get().QueueEvent(new WindowCloseEvent());		
 	}
 
 	void WindowsWindow::SwapBuffers()

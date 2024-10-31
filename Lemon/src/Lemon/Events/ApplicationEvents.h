@@ -1,6 +1,5 @@
 #pragma once
 #include "Event.h"
-#include "Lemon/Core/Logger.h"
 
 namespace Lemon
 {

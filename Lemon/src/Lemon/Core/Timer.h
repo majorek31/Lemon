@@ -1,6 +1,6 @@
+#pragma once
 #include <string>
 #include <chrono>
-#include "Logger.h"
 
 #define LM_TIME() Lemon::Timer timer(__FUNCTION__" took: {:d}ms")
 

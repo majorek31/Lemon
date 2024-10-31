@@ -1,7 +1,5 @@
 #pragma once
 #include <string>
-#include "Lemon/Core/Window.h"
-#include "Lemon/Core/Core.h"
 
 class Window;
 

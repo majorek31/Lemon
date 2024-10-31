@@ -4,6 +4,7 @@ namespace Lemon
 {
 	void Logger::Init()
 	{
+		LM_TIME();
 		std::vector<spdlog::sink_ptr> logSinks;
 		logSinks.emplace_back(std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>());
 		logSinks[0]->set_pattern("%^[%T] %n: %v%$");

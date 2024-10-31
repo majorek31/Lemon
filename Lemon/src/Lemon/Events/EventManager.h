@@ -1,5 +1,7 @@
 #pragma once
-#include "ApplicationEvents.h"
+#include "Event.h"
+#include <queue>
+#include "Lemon/Core/UUID.h"
 
 namespace Lemon
 {
