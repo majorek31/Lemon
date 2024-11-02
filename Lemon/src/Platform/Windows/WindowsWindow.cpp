@@ -17,6 +17,11 @@ namespace Lemon
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow*, int w, int h) {
 			EventManager::Get().QueueEvent(CreateRef<WindowResizeEvent>(w, h));
 		});
+		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
+			double x, y;
+			glfwGetCursorPos(window, &x, &y);
+			EventManager::Get().QueueEvent(CreateRef<MouseClickEvent>(button, action, x, y));
+		});
 	}
 
 	WindowsWindow::~WindowsWindow()
