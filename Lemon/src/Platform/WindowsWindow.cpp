@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "WindowsWindow.h"
 #include <GLFW/glfw3.h>
-#include "Lemon/Events/ApplicationEvents.h"
 
 namespace Lemon
 {
@@ -16,7 +15,7 @@ namespace Lemon
 		LM_CORE_INFO("Created window");
 		glfwSetWindowUserPointer(m_Window, this);
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow*, int w, int h) {
-			EventManager::Get().FireEvent(new WindowResizeEvent(w, h));
+			EventManager::Get().QueueEvent(CreateRef<WindowResizeEvent>(w, h));
 		});
 	}
 
@@ -30,7 +29,7 @@ namespace Lemon
 	{
 		glfwPollEvents();
 		if (glfwWindowShouldClose(m_Window))
-			EventManager::Get().QueueEvent(new WindowCloseEvent());		
+			EventManager::Get().FireEvent(CreateRef<WindowCloseEvent>());		
 	}
 
 	void WindowsWindow::SwapBuffers()

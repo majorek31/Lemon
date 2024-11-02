@@ -29,6 +29,6 @@ namespace Lemon
 		std::string m_ApplicationName;
 		Scoped<Window> m_Window;
 		bool m_IsRunning;
-		EventHandlerHandle m_WindowCloseEventHandler;
+		Scoped<EventHandlerHandle> m_WindowCloseEventHandler;
 	};
 }

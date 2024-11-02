@@ -8,14 +8,14 @@ namespace Lemon
 	class IEventHandlerWrapper
 	{
 	public:
-		void Execute(const Event& event) { Call(event); }
-		virtual const size_t GetType() const = 0;
+		void Execute(const Ref<Event> event) { Call(event); }
+		virtual const EventHandlerHandle& GetType() const = 0;
 	protected:
-		virtual void Call(const Event& event) = 0;
+		virtual void Call(const Ref<Event> event) = 0;
 	};
 
 	template<typename TEvent>
-	class EventHandlerWrapper : IEventHandlerWrapper
+	class EventHandlerWrapper : public IEventHandlerWrapper
 	{
 	public:
 		EventHandlerWrapper(const EventHandler<TEvent>& handler) :
@@ -23,14 +23,14 @@ namespace Lemon
 			m_HandlerHandle(UUID())
 		{}
 	private:
-		void Call(const Event& event) override
+		void Call(const Ref<Event> event) override
 		{
-			if (event.GetEventType() == TEvent::GetStaticEventType())
+			if (event->GetEventType() == TEvent::GetStaticEventType())
 			{
-				m_Handler(static_cast<const TEvent&>(event));
+				m_Handler(static_cast<const TEvent&>(*event.get()));
 			}
 		}
-		const EventHandlerHandle GetType() const override { return m_HandlerHandle; }
+		const EventHandlerHandle& GetType() const override { return m_HandlerHandle; }
 		EventHandler<TEvent> m_Handler;
 		const EventHandlerHandle m_HandlerHandle;
 	};
@@ -38,28 +38,24 @@ namespace Lemon
 	class EventManager
 	{
 	public:
-		void Subscribe(size_t eventType, IEventHandlerWrapper* handler);
-		void Unsubscribe(size_t eventId, size_t handlerId);
-		void FireEvent(const Event& event);
-		void FireEvent(const Event* event);
-		void QueueEvent(Event* event);
+		EventHandlerHandle Subscribe(size_t eventType, Ref<IEventHandlerWrapper> handler);
+
+		void Unsubscribe(size_t eventId, EventHandlerHandle& handlerId);
+		void FireEvent(const Ref<Event> event);
+		void QueueEvent(const Ref<Event> event);
 		void Dispatch();
 
 		static EventManager& Get();
+		void EventManager::Unsubscribe(EventHandlerHandle& handle);
 		template<typename TEvent>
-		static EventHandlerHandle Subscribe(EventHandler<TEvent> handler);
-		static void Unsubscribe(EventHandlerHandle handle);
+		EventHandlerHandle Subscribe(const EventHandler<TEvent>& handler)
+		{
+			auto wrapper = CreateRef<EventHandlerWrapper<TEvent>>(handler);
+			return EventHandlerHandle(Subscribe(TEvent::GetStaticEventType(), wrapper).Handle);
+		}
 	private:
 		inline static EventManager* s_Instance = nullptr;
-		std::queue<Event*> m_EventsQueue;
-		std::unordered_map<size_t, std::vector<IEventHandlerWrapper*>> m_Subscribers;
+		std::queue<Ref<Event>> m_EventsQueue;
+		std::unordered_map<size_t, std::vector<Ref<IEventHandlerWrapper>>> m_Subscribers;
 	};
-	template<typename TEvent>
-	inline EventHandlerHandle EventManager::Subscribe(EventHandler<TEvent> handler)
-	{
-		IEventHandlerWrapper* eventHandler = (IEventHandlerWrapper*)(new EventHandlerWrapper<TEvent>(handler));
-		EventManager::Get().Subscribe(TEvent::GetStaticEventType(), eventHandler);
-
-		return eventHandler->GetType();
-	}
 }

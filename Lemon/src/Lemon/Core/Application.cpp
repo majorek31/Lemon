@@ -4,9 +4,11 @@
 
 namespace Lemon
 {
+
 	Application::Application(const Options& options) : 
 		m_ApplicationName(options.Name),
-		m_IsRunning(true)
+		m_IsRunning(true),
+		m_WindowCloseEventHandler(BIND_EVENT_FN(WindowCloseEvent, OnWindowClose))
 	{
 		LM_TIME();
 		if (s_Instance)
@@ -15,13 +17,11 @@ namespace Lemon
 		Logger::Init();
 		LM_CORE_INFO("Application created: {:s}", options.Name);
 		m_Window.reset(Window::Create());
-		m_WindowCloseEventHandler =	EventManager::Subscribe<WindowCloseEvent>([this](const WindowCloseEvent& e) { OnWindowClose(e); });
 	}
 
 	Application::~Application()
 	{
 		LM_TIME();
-		EventManager::Unsubscribe(m_WindowCloseEventHandler);
 	}
 
 	void Application::Start()

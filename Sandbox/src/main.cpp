@@ -3,17 +3,22 @@
 #include "Lemon/Events/ApplicationEvents.h"
 #include <iostream>
 
-class SandboxApp : public Lemon::Application
+class SandboxApp : public Lemon::Application	
 {
 public:
-	SandboxApp(const Application::Options& options) : Application(options)
+	SandboxApp(const Application::Options& options) : Application(options), m_WindowResizeHandler(BIND_EVENT_FN(Lemon::WindowResizeEvent, OnWindowResize))
 	{
-		Lemon::EventManager::Get().Subscribe<Lemon::WindowResizeEvent>([](const Lemon::WindowResizeEvent& e) {
-			std::cout << e.Width << "x" << e.Height << std::endl;
-			return false;
-		});
-	
+
 	}
+	void OnWindowResize(const Lemon::WindowResizeEvent& e)
+	{
+		std::cout << e.Width << "x" << e.Height << std::endl;
+	}
+	~SandboxApp()
+	{
+	}
+private:
+	Lemon::Scoped<Lemon::EventHandlerHandle> m_WindowResizeHandler;
 };
 Lemon::Application* Lemon::Application::Create(const Application::Options& options)
 {

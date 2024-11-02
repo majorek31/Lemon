@@ -19,6 +19,7 @@
 
 #include "Lemon/Events/Event.h"
 #include "Lemon/Events/EventManager.h"
+#include "Lemon/Events/ApplicationEvents.h"
 
 #include "Lemon/Core/Window.h"
 #include "Lemon/Core/Application.h"

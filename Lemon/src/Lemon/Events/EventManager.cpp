@@ -3,7 +3,7 @@
 namespace Lemon
 {
 
-	void EventManager::Subscribe(size_t eventType, IEventHandlerWrapper* handler)
+	EventHandlerHandle EventManager::Subscribe(size_t eventType, Ref<IEventHandlerWrapper> handler)
 	{
 		auto subscribers = m_Subscribers.find(eventType);
 		if (subscribers != m_Subscribers.end())
@@ -14,10 +14,11 @@ namespace Lemon
 				if (item->GetType() == handler->GetType())
 				{
 					LM_CORE_ERROR("Tried to register already registered event callback");
-					return;
+					throw std::runtime_error("Tried to register already registered event callback");
 				}
 			}
 			handlers.emplace_back(handler);
+			return handler->GetType();
 		}
 		else
 		{
@@ -25,9 +26,9 @@ namespace Lemon
 		}
 	}
 
-	void EventManager::Unsubscribe(size_t eventId, size_t handlerId)
+	void EventManager::Unsubscribe(size_t eventId, EventHandlerHandle& handlerId)
 	{
-		auto& handlers = m_Subscribers[eventId]; // Use reference instead of copying
+		auto& handlers = m_Subscribers[eventId];
 		for (auto& it : handlers)
 		{
 			if (it->GetType() == handlerId)
@@ -38,19 +39,13 @@ namespace Lemon
 		}
 	}
 
-	void EventManager::FireEvent(const Event& event)
+	void EventManager::FireEvent(const Ref<Event> event)
 	{
-		for (auto& handler : m_Subscribers[event.GetEventType()])
+		for (auto& handler : m_Subscribers[event->GetEventType()])
 			handler->Execute(event);
 	}
 
-	void EventManager::FireEvent(const Event* event)
-	{
-		for (auto& handler : m_Subscribers[event->GetEventType()])
-			handler->Execute(*event);
-	}
-
-	void EventManager::QueueEvent(Event* event)
+	void EventManager::QueueEvent(const Ref<Event> event)
 	{
 		m_EventsQueue.emplace(event);
 	}
@@ -64,7 +59,6 @@ namespace Lemon
 			{
 				FireEvent(event);
 			}
-			delete event;
 			m_EventsQueue.pop();
 		}
 	}
@@ -76,7 +70,7 @@ namespace Lemon
 		return *s_Instance;
 	}
 
-	void EventManager::Unsubscribe(EventHandlerHandle handle)
+	void EventManager::Unsubscribe(EventHandlerHandle& handle)
 	{
 		for (auto& [_, handlers] : s_Instance->m_Subscribers)
 		{
